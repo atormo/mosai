@@ -74,7 +74,7 @@ export function PieceForm({ open, onOpenChange, piece, onSubmit }: PieceFormProp
     const result = schema.safeParse(data);
 
     if (!result.success) {
-      toast.error(result.error.errors[0].message);
+      toast.error(result.error.issues[0].message);
       setIsLoading(false);
       return;
     }

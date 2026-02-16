@@ -39,7 +39,7 @@ export function RegisterForm() {
     const result = usernameSchema.safeParse(value);
     if (!result.success) {
       setUsernameStatus("invalid");
-      setUsernameError(result.error.errors[0].message);
+      setUsernameError(result.error.issues[0].message);
       return;
     }
 
@@ -91,7 +91,7 @@ export function RegisterForm() {
       });
 
       if (!result.success) {
-        toast.error(result.error.errors[0].message);
+        toast.error(result.error.issues[0].message);
         setIsLoading(false);
         return;
       }
