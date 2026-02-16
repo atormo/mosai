@@ -15,7 +15,9 @@ import {
 } from "@/components/ui/dialog";
 import { PieceGrid } from "@/components/dashboard/piece-grid";
 import { PieceForm } from "@/components/dashboard/piece-form";
+import { LivePreview } from "@/components/dashboard/live-preview";
 import { usePieces } from "@/hooks/use-pieces";
+import { useProfile } from "@/hooks/use-profile";
 import type { Piece, CreatePieceInput, UpdatePieceInput } from "@/lib/types";
 
 export default function DashboardPage() {
@@ -28,6 +30,7 @@ export default function DashboardPage() {
     reorderPieces,
     toggleActive,
   } = usePieces();
+  const { profile } = useProfile();
 
   const [formOpen, setFormOpen] = useState(false);
   const [editingPiece, setEditingPiece] = useState<Piece | null>(null);
@@ -100,33 +103,41 @@ export default function DashboardPage() {
   }
 
   return (
-    <div className="max-w-5xl mx-auto">
-      {/* Header */}
-      <div className="flex items-center justify-between mb-6">
-        <div>
-          <h1 className="text-2xl font-bold">Tus piezas</h1>
-          <p className="text-muted-foreground">
-            {pieces.length} {pieces.length === 1 ? "pieza" : "piezas"} en tu
-            mosaico
-          </p>
+    <div className="flex gap-8">
+      {/* Main Content */}
+      <div className="flex-1 max-w-4xl">
+        {/* Header */}
+        <div className="flex items-center justify-between mb-6">
+          <div>
+            <h1 className="text-2xl font-bold">Tus piezas</h1>
+            <p className="text-muted-foreground">
+              {pieces.length} {pieces.length === 1 ? "pieza" : "piezas"} en tu
+              mosaico
+            </p>
+          </div>
+          {pieces.length > 0 && (
+            <Button onClick={handleAddNew} className="gap-2">
+              <Plus className="h-4 w-4" />
+              Nueva pieza
+            </Button>
+          )}
         </div>
-        {pieces.length > 0 && (
-          <Button onClick={handleAddNew} className="gap-2">
-            <Plus className="h-4 w-4" />
-            Nueva pieza
-          </Button>
-        )}
+
+        {/* Grid */}
+        <PieceGrid
+          pieces={pieces}
+          onReorder={handleReorder}
+          onEdit={handleEdit}
+          onDelete={handleDelete}
+          onToggleActive={handleToggleActive}
+          onAddNew={handleAddNew}
+        />
       </div>
 
-      {/* Grid */}
-      <PieceGrid
-        pieces={pieces}
-        onReorder={handleReorder}
-        onEdit={handleEdit}
-        onDelete={handleDelete}
-        onToggleActive={handleToggleActive}
-        onAddNew={handleAddNew}
-      />
+      {/* Live Preview - Hidden on mobile */}
+      <div className="hidden xl:block sticky top-6 h-fit">
+        <LivePreview profile={profile} pieces={pieces} />
+      </div>
 
       {/* Piece Form Modal */}
       <PieceForm
