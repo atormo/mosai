@@ -1,0 +1,67 @@
+import type { Theme, ThemeKey } from "./types";
+
+export const themes: Record<ThemeKey, Theme> = {
+  clean: {
+    name: "Clean",
+    preview: "○",
+    container: "bg-[#FAFAF8]",
+    grid: "gap-1",
+    piece: "rounded-none",
+    badge: "bg-black text-white rounded-full",
+    header: "font-sans font-medium text-gray-900",
+    text: "text-gray-600",
+    hover: "hover:scale-[1.02] transition-transform",
+    aspectRatio: "aspect-square",
+  },
+  midnight: {
+    name: "Midnight",
+    preview: "●",
+    container: "bg-[#0A0A0F]",
+    grid: "gap-2",
+    piece: "rounded-xl",
+    badge: "bg-white text-black rounded-full",
+    header: "font-sans font-bold text-white",
+    text: "text-gray-400",
+    hover: "hover:scale-[1.02] hover:ring-1 hover:ring-white/20 transition-all",
+    aspectRatio: "aspect-square",
+  },
+  candy: {
+    name: "Candy",
+    preview: "◐",
+    container: "bg-gradient-to-br from-[#FFE5EC] to-[#E5F0FF]",
+    grid: "gap-3",
+    piece: "rounded-2xl",
+    badge: "rounded-full font-bold",
+    header: "font-serif font-bold text-gray-900",
+    text: "text-gray-600",
+    hover:
+      "hover:scale-[1.03] hover:rotate-[0.5deg] hover:shadow-lg transition-all",
+    aspectRatio: "aspect-square",
+  },
+  brutalist: {
+    name: "Brutalist",
+    preview: "■",
+    container: "bg-[#F5F0EB]",
+    grid: "gap-0 border-2 border-black",
+    piece: "rounded-none border border-black",
+    badge: "bg-[#FFE500] text-black font-mono uppercase -rotate-2",
+    header: "font-mono uppercase tracking-widest text-black",
+    text: "text-black/70",
+    hover: "hover:invert transition-all",
+    aspectRatio: "aspect-square",
+  },
+  film: {
+    name: "Film",
+    preview: "◑",
+    container: "bg-[#1A1A1A]",
+    grid: "gap-4",
+    piece: "rounded-sm",
+    badge: "bg-white/10 backdrop-blur text-white rounded",
+    header: "font-serif italic font-light text-white",
+    text: "text-gray-500",
+    hover: "hover:brightness-110 transition-all",
+    aspectRatio: "aspect-[3/4]",
+  },
+} as const;
+
+export const themeKeys = Object.keys(themes) as ThemeKey[];
