@@ -101,60 +101,68 @@ export function PieceForm({ open, onOpenChange, piece, onSubmit }: PieceFormProp
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-md">
+      <DialogContent className="sm:max-w-2xl">
         <DialogHeader>
           <DialogTitle>{isEditing ? "Editar pieza" : "Nueva pieza"}</DialogTitle>
         </DialogHeader>
 
-        <form onSubmit={handleSubmit} className="space-y-6">
-          {/* Image Upload */}
-          <ImageUploader
-            value={imageUrl}
-            onChange={setImageUrl}
-            type="piece"
-          />
+        <form onSubmit={handleSubmit}>
+          <div className="flex flex-col sm:flex-row gap-6">
+            {/* Left: Image Upload */}
+            <div className="sm:w-[200px] shrink-0">
+              <ImageUploader
+                value={imageUrl}
+                onChange={setImageUrl}
+                type="piece"
+                compact
+              />
+            </div>
 
-          {/* Destination URL */}
-          <div className="space-y-2">
-            <Label htmlFor="destinationUrl">URL de destino</Label>
-            <Input
-              id="destinationUrl"
-              type="url"
-              placeholder="https://ejemplo.com/mi-contenido"
-              value={destinationUrl}
-              onChange={(e) => setDestinationUrl(e.target.value)}
-              required
-            />
-            <p className="text-xs text-muted-foreground">
-              A dónde llevará esta pieza cuando alguien haga clic.
-            </p>
+            {/* Right: Fields */}
+            <div className="flex-1 space-y-4">
+              {/* Destination URL */}
+              <div className="space-y-1">
+                <Label htmlFor="destinationUrl">URL de destino</Label>
+                <Input
+                  id="destinationUrl"
+                  type="url"
+                  placeholder="https://ejemplo.com/mi-contenido"
+                  value={destinationUrl}
+                  onChange={(e) => setDestinationUrl(e.target.value)}
+                  required
+                />
+                <p className="text-xs text-muted-foreground">
+                  A donde llevara esta pieza cuando hagan clic.
+                </p>
+              </div>
+
+              {/* Title */}
+              <div className="space-y-1">
+                <Label htmlFor="title">Titulo (opcional)</Label>
+                <Input
+                  id="title"
+                  type="text"
+                  placeholder="Mi nuevo podcast"
+                  value={title}
+                  onChange={(e) => setTitle(e.target.value)}
+                  maxLength={60}
+                />
+                <p className="text-xs text-muted-foreground">
+                  {title.length}/60 caracteres
+                </p>
+              </div>
+
+              {/* Badge Picker */}
+              <BadgePicker
+                value={badgeType}
+                customText={badgeText}
+                customEmoji={badgeEmoji}
+                onChange={handleBadgeChange}
+              />
+            </div>
           </div>
 
-          {/* Title */}
-          <div className="space-y-2">
-            <Label htmlFor="title">Título (opcional)</Label>
-            <Input
-              id="title"
-              type="text"
-              placeholder="Mi nuevo podcast"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              maxLength={60}
-            />
-            <p className="text-xs text-muted-foreground">
-              {title.length}/60 caracteres
-            </p>
-          </div>
-
-          {/* Badge Picker */}
-          <BadgePicker
-            value={badgeType}
-            customText={badgeText}
-            customEmoji={badgeEmoji}
-            onChange={handleBadgeChange}
-          />
-
-          <DialogFooter>
+          <DialogFooter className="mt-6">
             <Button
               type="button"
               variant="outline"

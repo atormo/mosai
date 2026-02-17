@@ -39,7 +39,8 @@ export function LoginForm() {
       });
 
       if (error) {
-        toast.error("Email o contraseña incorrectos");
+        console.error("Login error:", error.message, error.status);
+        toast.error(error.message);
         setIsLoading(false);
         return;
       }
@@ -84,7 +85,7 @@ export function LoginForm() {
           </div>
         </CardContent>
 
-        <CardFooter className="flex flex-col gap-4">
+        <CardFooter className="flex flex-col gap-4 pt-6">
           <Button type="submit" className="w-full" disabled={isLoading}>
             {isLoading ? (
               <>

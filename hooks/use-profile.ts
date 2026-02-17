@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useMemo } from "react";
 import { createClient } from "@/lib/supabase/client";
 import type { Profile, UpdateProfileInput } from "@/lib/types";
 
@@ -9,7 +9,7 @@ export function useProfile() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const supabase = createClient();
+  const supabase = useMemo(() => createClient(), []);
 
   const fetchProfile = useCallback(async () => {
     setIsLoading(true);
@@ -26,15 +26,38 @@ export function useProfile() {
         return;
       }
 
-      const { data, error: fetchError } = await supabase
+      let { data, error: fetchError } = await supabase
         .from("profiles")
         .select("*")
         .eq("id", user.id)
         .single();
 
-      if (fetchError) {
+      // If profile doesn't exist, create it (fallback for missing trigger)
+      if (fetchError && fetchError.code === "PGRST116") {
+        const meta = user.user_metadata || {};
+        const { data: newProfile, error: insertError } = await supabase
+          .from("profiles")
+          .insert({
+            id: user.id,
+            username: meta.username || `user-${user.id.slice(0, 8)}`,
+            display_name: meta.display_name || "Usuario",
+            bio: "",
+            avatar_url: "",
+            theme: "clean",
+          })
+          .select()
+          .single();
+
+        if (insertError) {
+          setError(insertError.message);
+        } else {
+          data = newProfile;
+        }
+      } else if (fetchError) {
         setError(fetchError.message);
-      } else {
+      }
+
+      if (data) {
         setProfile(data);
       }
     } catch (err) {

@@ -14,6 +14,7 @@ interface ImageUploaderProps {
   onChange: (url: string) => void;
   type: "avatar" | "piece";
   className?: string;
+  compact?: boolean;
 }
 
 export function ImageUploader({
@@ -21,6 +22,7 @@ export function ImageUploader({
   onChange,
   type,
   className,
+  compact,
 }: ImageUploaderProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [preview, setPreview] = useState<string | null>(null);
@@ -94,7 +96,11 @@ export function ImageUploader({
         onClick={handleClick}
         className={cn(
           "relative border-2 border-dashed rounded-lg overflow-hidden cursor-pointer transition-colors",
-          type === "avatar" ? "w-24 h-24 rounded-full" : "aspect-square",
+          type === "avatar"
+            ? "w-24 h-24 rounded-full"
+            : compact
+              ? "aspect-square max-w-[200px]"
+              : "aspect-square",
           displayUrl
             ? "border-transparent"
             : "border-gray-300 hover:border-[#FF6B35]"

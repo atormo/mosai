@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useMemo } from "react";
 import { createClient } from "@/lib/supabase/client";
 import type { Piece, CreatePieceInput, UpdatePieceInput } from "@/lib/types";
 
@@ -9,7 +9,7 @@ export function usePieces() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const supabase = createClient();
+  const supabase = useMemo(() => createClient(), []);
 
   const fetchPieces = useCallback(async () => {
     setIsLoading(true);

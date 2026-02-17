@@ -104,32 +104,35 @@ export function RegisterForm() {
 
       const supabase = createClient();
 
-      // Sign up user
+      // Sign up user - pass username & display_name in metadata
+      // so the database trigger can create the profile automatically
       const { data: authData, error: authError } = await supabase.auth.signUp({
         email,
         password,
+        options: {
+          data: {
+            username,
+            display_name: displayName,
+          },
+        },
       });
 
-      if (authError || !authData.user) {
-        toast.error(authError?.message || "Error al crear la cuenta");
+      if (authError) {
+        toast.error(authError.message);
         setIsLoading(false);
         return;
       }
 
-      // Create profile
-      const { error: profileError } = await supabase.from("profiles").insert({
-        id: authData.user.id,
-        username,
-        display_name: displayName,
-      });
-
-      if (profileError) {
-        toast.error("Error al crear el perfil");
-        setIsLoading(false);
+      // If email confirmation is required, user won't have a session yet
+      if (authData.user && !authData.session) {
+        toast.success(
+          "¡Cuenta creada! Revisa tu email para confirmar tu cuenta."
+        );
+        router.push("/login");
         return;
       }
 
-      toast.success("¡Cuenta creada! Bienvenido a MOSAI 🟧");
+      toast.success("¡Cuenta creada! Bienvenido a MOSAI");
       router.push("/dashboard");
       router.refresh();
     } catch {
@@ -174,7 +177,7 @@ export function RegisterForm() {
               <Input
                 id="username"
                 type="text"
-                placeholder="tormius"
+                placeholder="Tu nombre de usuario"
                 value={username}
                 onChange={(e) => handleUsernameChange(e.target.value)}
                 disabled={isLoading}
@@ -222,7 +225,7 @@ export function RegisterForm() {
           </div>
         </CardContent>
 
-        <CardFooter className="flex flex-col gap-4">
+        <CardFooter className="flex flex-col gap-4 pt-6">
           <Button
             type="submit"
             className="w-full"

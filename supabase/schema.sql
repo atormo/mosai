@@ -137,6 +137,33 @@ CREATE POLICY "Users can delete their own piece images"
   );
 
 -- ============================================
+-- AUTO-CREATE PROFILE ON SIGNUP
+-- ============================================
+-- This trigger creates a profile automatically when a user signs up.
+-- The username and display_name are passed via auth.signUp metadata.
+
+CREATE OR REPLACE FUNCTION handle_new_user()
+RETURNS TRIGGER AS $$
+BEGIN
+  INSERT INTO profiles (id, username, display_name, bio, avatar_url, theme)
+  VALUES (
+    NEW.id,
+    COALESCE(NEW.raw_user_meta_data->>'username', 'user-' || LEFT(NEW.id::text, 8)),
+    COALESCE(NEW.raw_user_meta_data->>'display_name', 'Usuario'),
+    '',
+    '',
+    'clean'
+  );
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+CREATE TRIGGER on_auth_user_created
+  AFTER INSERT ON auth.users
+  FOR EACH ROW
+  EXECUTE FUNCTION handle_new_user();
+
+-- ============================================
 -- FUNCTIONS & TRIGGERS
 -- ============================================
 

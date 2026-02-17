@@ -23,41 +23,48 @@ export function MosaiPiece({ piece, themeKey }: MosaiPieceProps) {
       href={piece.destination_url}
       target="_blank"
       rel="noopener noreferrer"
-      className={cn(
-        "relative block overflow-hidden",
-        theme.piece,
-        theme.aspectRatio,
-        theme.hover
-      )}
+      className={cn("block group", theme.hover)}
     >
-      <Image
-        src={piece.image_url}
-        alt={piece.title || ""}
-        fill
-        className="object-cover"
-        sizes="(max-width: 768px) 33vw, 200px"
-      />
+      {/* Image container */}
+      <div
+        className={cn(
+          "relative overflow-hidden",
+          theme.piece,
+          theme.aspectRatio
+        )}
+      >
+        <Image
+          src={piece.image_url}
+          alt={piece.title || ""}
+          fill
+          className="object-cover"
+          sizes="(max-width: 768px) 50vw, 200px"
+        />
 
-      {/* Badge */}
-      {badgeDisplay && (
-        <div
+        {/* Badge */}
+        {badgeDisplay && (
+          <div
+            className={cn(
+              "absolute top-2 left-2 px-2 py-1 text-xs font-medium",
+              theme.badge,
+              themeKey === "candy" && badgePreset?.color
+            )}
+          >
+            {badgeDisplay.emoji} {badgeDisplay.text}
+          </div>
+        )}
+      </div>
+
+      {/* Title below image */}
+      {piece.title && (
+        <p
           className={cn(
-            "absolute top-2 right-2 px-2 py-1 text-xs font-medium animate-in zoom-in-50 duration-300",
-            theme.badge,
-            themeKey === "candy" && badgePreset?.color
+            "mt-1.5 text-sm font-medium leading-tight line-clamp-2",
+            theme.header
           )}
         >
-          {badgeDisplay.emoji} {badgeDisplay.text}
-        </div>
-      )}
-
-      {/* Title overlay (optional) */}
-      {piece.title && (
-        <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/60 to-transparent p-2">
-          <p className="text-white text-xs font-medium truncate">
-            {piece.title}
-          </p>
-        </div>
+          {piece.title}
+        </p>
       )}
     </a>
   );

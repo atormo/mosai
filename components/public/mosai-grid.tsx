@@ -15,14 +15,14 @@ export function MosaiGrid({ pieces, themeKey }: MosaiGridProps) {
     return (
       <div className="py-12 text-center">
         <p className={cn("text-sm", theme.text)}>
-          Este mosaico está vacío
+          Este mosaico esta vacio
         </p>
       </div>
     );
   }
 
   return (
-    <div className={cn("grid grid-cols-3", theme.grid)}>
+    <div className={cn("grid grid-cols-2 px-4", theme.grid)}>
       {pieces.map((piece) => (
         <MosaiPiece key={piece.id} piece={piece} themeKey={themeKey} />
       ))}
